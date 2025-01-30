@@ -15,6 +15,7 @@ class ViewController: UIViewController {
     private lazy var mainInfoLabel: (String, CGFloat) -> UILabel = { content, size in
         let label = UILabel()
         label.font = .systemFont(ofSize: size)
+        label.textColor = .black
         label.text = content
         return label
     }
@@ -44,6 +45,7 @@ class ViewController: UIViewController {
     // MARK: User info entries
     
     private lazy var sex = UserInfoEntry(heading: "Sex", info: "Woman")
+    private lazy var work = UserInfoEntry(heading: "Work", info: "Apple Company (CEO) 👨‍💻")
     
     // MARK: definite
     
@@ -62,10 +64,17 @@ class ViewController: UIViewController {
         return horizontalStackView
     }()
     
+    // MARK: Definition of Info Stack
+    
+    private lazy var userInfoStackView = InfoStackView()
+    private lazy var familyInfoStackView = InfoStackView()
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
         setupHeadStack()
+        setupUserInfoStack()
         view.addSubview(sex)
         
         sex.translatesAutoresizingMaskIntoConstraints = false
@@ -83,6 +92,20 @@ class ViewController: UIViewController {
             headStackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             headStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: leadingInset)
         ])
+    }
+    
+    private func setupUserInfoStack() {
+        view.addSubview(userInfoStackView)
+        [mainInfoLabel("User info", 19), sex, work, subInfoLabel("Family"), familyInfoStackView].forEach {
+            userInfoStackView.addArrangedSubview($0)
+        }
+        userInfoStackView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            userInfoStackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            userInfoStackView.topAnchor.constraint(equalTo: headStackView.bottomAnchor, constant: 38),
+            userInfoStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: leadingInset)
+        ])
+            
     }
 
 }
