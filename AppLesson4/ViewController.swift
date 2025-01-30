@@ -47,11 +47,20 @@ class ViewController: UIViewController {
     private lazy var sex = UserInfoEntry(heading: "Sex", info: "Woman")
     private lazy var work = UserInfoEntry(heading: "Work", info: "Apple Company (CEO) 👨‍💻")
     
+    // MARK: Family
+    
+    private lazy var husband = FamilyMemberEntry(member: "MMM", name: "GGG", birthdate: "01.01.666")
+    private lazy var child1 = FamilyMemberEntry(member: "Child", name: "KKKK", birthdate: "666")
+    private lazy var child2 = FamilyMemberEntry(member: "Child", name: "PPPP", birthdate: "666")
+    private lazy var father = FamilyMemberEntry(member: "Father", name: "Artem Obama", birthdate: "666")
+    private lazy var mother = FamilyMemberEntry(member: "Mother", name: "Svetlana Obama", birthdate: "666")
+    
+    
     // MARK: definite
     
     private lazy var headStackView: UIStackView = {
         let horizontalStackView = UIStackView()
-        horizontalStackView.axis = .vertical
+        horizontalStackView.axis = .horizontal
         let verticalStackView = UIStackView()
         verticalStackView.axis = .vertical
         
@@ -75,12 +84,7 @@ class ViewController: UIViewController {
         view.backgroundColor = .white
         setupHeadStack()
         setupUserInfoStack()
-        view.addSubview(sex)
-        
-        sex.translatesAutoresizingMaskIntoConstraints = false
-        
-        sex.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        sex.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        setupFamilyInfoStack()
     }
     
     private func setupHeadStack() {
@@ -108,5 +112,11 @@ class ViewController: UIViewController {
             
     }
 
+    private func setupFamilyInfoStack() {
+        [husband, child1, child2, father, mother].forEach {
+            familyInfoStackView.addArrangedSubview($0)
+        }
+    }
+    
 }
 
