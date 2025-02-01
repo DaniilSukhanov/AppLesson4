@@ -8,6 +8,9 @@
 import UIKit
 
 class ViewController: UIViewController {
+    private enum Constant {
+        
+    }
     
     // MARK: Basic UI elements
     
@@ -63,7 +66,6 @@ class ViewController: UIViewController {
         horizontalStackView.axis = .horizontal
         let verticalStackView = UIStackView()
         verticalStackView.axis = .vertical
-        
         verticalStackView.addArrangedSubview(self.mainInfoLabel("Depp", 17))
         verticalStackView.addArrangedSubview(self.subInfoLabel("01.01.1999"))
         
