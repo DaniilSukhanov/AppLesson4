@@ -7,16 +7,20 @@
 
 import UIKit
 
-struct SectionConfig<T: Sendable> {
+struct SectionConfig<Cell: UITableViewCell, T: Sendable> {
+    let typeCell: Cell.Type
     let title: String?
     let dataCells: [T]
     let cellReuseIdentifier: String
-    let configureCell: (UITableViewCell, T) -> Void
+    let configureCell: (Cell, T) -> Void
     
-    init(title: String? = nil,
-         items: [T],
-         cellReuseIdentifier: String,
-         configureCell: @escaping (UITableViewCell, T) -> Void) {
+    init(
+        title: String? = nil,
+        items: [T],
+        cellReuseIdentifier: String = UUID().uuidString,
+        configureCell: @escaping (Cell, T) -> Void
+    ) {
+        self.typeCell = Cell.self
         self.title = title
         self.dataCells = items
         self.cellReuseIdentifier = cellReuseIdentifier
