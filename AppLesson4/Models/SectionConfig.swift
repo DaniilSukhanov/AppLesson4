@@ -7,24 +7,35 @@
 
 import UIKit
 
-struct SectionConfig<Cell: UITableViewCell, T: Sendable> {
-    let typeCell: Cell.Type
+
+struct SectionConfig<Cell: UITableViewCell & ConfigurableCell, T: Sendable>: AnySectionConfig where Cell.Model == T {
     let title: String?
     let dataCells: [T]
     let cellReuseIdentifier: String
-    let configureCell: (Cell, T) -> Void
     
     init(
         title: String? = nil,
         items: [T],
-        cellReuseIdentifier: String = UUID().uuidString,
-        configureCell: @escaping (Cell, T) -> Void
+        cellReuseIdentifier: String = String(describing: Cell.self)
     ) {
-        self.typeCell = Cell.self
         self.title = title
         self.dataCells = items
         self.cellReuseIdentifier = cellReuseIdentifier
-        self.configureCell = configureCell
+    }
+    
+    var numberOfItems: Int {
+        dataCells.count
+    }
+    
+    func registerCell(in tableView: UITableView) {
+        tableView.register(Cell.self, forCellReuseIdentifier: cellReuseIdentifier)
+    }
+    
+    func configureCell(_ cell: UITableViewCell, forRow row: Int) {
+        guard let cell = cell as? Cell else {
+            return
+        }
+        cell.setup(with: dataCells[row])
     }
 }
 

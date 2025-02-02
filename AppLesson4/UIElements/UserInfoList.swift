@@ -8,7 +8,7 @@
 import UIKit
 
 final class UserInfoList: UITableView {
-    private var sections: [SectionConfig<UITableViewCell, any Sendable>] = []
+    private var sections: [AnySectionConfig] = []
     
     init() {
         super.init(frame: .zero, style: .plain)
@@ -21,11 +21,9 @@ final class UserInfoList: UITableView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-}
-
-extension UserInfoList {
-    func addSection(_ section: SectionConfig<UITableViewCell, any Sendable>) {
-        register(section.typeCell, forCellReuseIdentifier: section.cellReuseIdentifier)
+    
+    func addSection(_ section: AnySectionConfig) {
+        section.registerCell(in: self)
         sections.append(section)
     }
 }
@@ -36,17 +34,16 @@ extension UserInfoList: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        sections[section].dataCells.count
+        sections[section].numberOfItems
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let section = sections[indexPath.section]
+        let sectionConfig = sections[indexPath.section]
         let cell = tableView.dequeueReusableCell(
-            withIdentifier: section.cellReuseIdentifier,
+            withIdentifier: sectionConfig.cellReuseIdentifier,
             for: indexPath
         )
-        let item = section.dataCells[indexPath.row]
-        section.configureCell(cell, item)
+        sectionConfig.configureCell(cell, forRow: indexPath.row)
         return cell
     }
     
@@ -54,3 +51,4 @@ extension UserInfoList: UITableViewDataSource {
         sections[section].title
     }
 }
+
