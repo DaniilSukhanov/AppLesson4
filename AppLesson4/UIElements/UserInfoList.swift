@@ -11,9 +11,11 @@ final class UserInfoList: UITableView {
     private var sections: [AnySectionConfig] = []
     
     init() {
-        super.init(frame: .zero, style: .plain)
+        super.init(frame: .zero, style: .grouped)
         dataSource = self
-        separatorStyle = .none
+        delegate = self
+        separatorStyle = .singleLine
+        separatorColor = AppColor.separator
         rowHeight = UITableView.automaticDimension
         estimatedRowHeight = 44
     }
@@ -44,11 +46,51 @@ extension UserInfoList: UITableViewDataSource {
             for: indexPath
         )
         sectionConfig.configureCell(cell, forRow: indexPath.row)
+        
+        cell.roundCorners(for: indexPath, in: tableView)
         return cell
     }
+}
+
+extension UserInfoList: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let headerView = UIView()
+        let label = UILabel()
+        label.text = sections[section].title
+        label.font = .systemFont(ofSize: 13)
+        label.textColor = AppColor.secondText
+        label.backgroundColor = AppColor.background
+        label.frame = .init(origin: .zero, size: CGSize(width: tableView.bounds.width, height: 40))
+        headerView.addSubview(label)
+        return headerView
+    }
     
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        sections[section].title
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        40
+    }
+}
+
+fileprivate extension UITableViewCell {
+    func roundCorners(for indexPath: IndexPath, in tableView: UITableView) {
+        let cornerRadius: CGFloat = 10
+        let numberOfRows = tableView.numberOfRows(inSection: indexPath.section)
+        var roundingCorners: UIRectCorner = []
+        
+        if indexPath.row == 0 {
+            roundingCorners.insert([.topLeft, .topRight])
+        }
+        if indexPath.row == numberOfRows - 1 {
+            roundingCorners.insert([.bottomLeft, .bottomRight])
+        }
+        
+        let maskLayer = CAShapeLayer()
+        maskLayer.path = UIBezierPath(
+            roundedRect: .init(x: bounds.minX, y: bounds.minY, width: tableView.bounds.width, height: bounds.height),
+            byRoundingCorners: roundingCorners,
+            cornerRadii: CGSize(width: cornerRadius, height: cornerRadius)
+        ).cgPath
+        
+        layer.mask = maskLayer
     }
 }
 
