@@ -35,6 +35,7 @@ class ViewController: UIViewController {
         static let profileCornerRadius: CGFloat = 25
         static let headStackViewTopInset: CGFloat = 16
         static let image = "profile"
+        static let titlePadding: CGFloat = 16
     }
     
     // MARK: Basic UI elements
@@ -75,6 +76,14 @@ class ViewController: UIViewController {
         return imageView
     }()
     
+    private lazy var userInfoListTitle: UILabel = {
+        let label = UILabel()
+        label.text = "User info"
+        label.font = .systemFont(ofSize: Constant.mainInfoFontSize)
+        label.textColor = AppColor.text
+        return label
+    }()
+    
     // MARK: definite
     
     private lazy var headStackView: UIStackView = {
@@ -95,6 +104,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = AppColor.background
         setupHeadStack()
+        setupUserInfoListTitle()
         setupUserInfoList()
     }
     
@@ -105,7 +115,8 @@ class ViewController: UIViewController {
         NSLayoutConstraint.activate([
             headStackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             headStackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: Constant.headStackViewTopInset),
-            headStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constant.leadingInset)
+            headStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constant.leadingInset),
+            headStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constant.leadingInset)
         ])
     }
     
@@ -114,7 +125,7 @@ class ViewController: UIViewController {
         userInfoList.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            userInfoList.topAnchor.constraint(equalTo: headStackView.bottomAnchor),
+            userInfoList.topAnchor.constraint(equalTo: userInfoListTitle.bottomAnchor),
             userInfoList.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constant.leadingInset),
             userInfoList.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constant.leadingInset),
             userInfoList.bottomAnchor.constraint(equalTo: view.bottomAnchor)
@@ -124,5 +135,16 @@ class ViewController: UIViewController {
             userInfoList.addSection(section)
         }
         userInfoList.reloadData()
+    }
+    
+    private func setupUserInfoListTitle() {
+        view.addSubview(userInfoListTitle)
+        userInfoListTitle.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            userInfoListTitle.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constant.leadingInset),
+            userInfoListTitle.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constant.leadingInset),
+            userInfoListTitle.topAnchor.constraint(equalTo: headStackView.bottomAnchor, constant: Constant.titlePadding)
+        ])
     }
 }
